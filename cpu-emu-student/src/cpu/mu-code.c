@@ -816,9 +816,8 @@ mnemonic: STA abs,Y
 bytes: 3
 cycles: 5
 */
-void cpu_6502_sta_aby(){
-
-    //TODO: Wrong addressing mode...
+void cpu_6502_sta_aby()
+{
     cycles = 5;
     char lowadd[8];
 
