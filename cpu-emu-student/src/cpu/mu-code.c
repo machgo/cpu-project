@@ -571,6 +571,13 @@ cycles: 2
 void cpu_6502_lda_imm(){
     cycles = 2;
 
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+    set_rw2read();
+    access_memory();
+    cp_register(dbr, acc);
+    
+    inc_pc();
 }
 
 
@@ -666,6 +673,31 @@ cycles: 4
 void cpu_6502_lda_abx (){
     cycles = 4;
 
+    char low[]="00000000";
+    char localflags[]="00000000";
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr, low);
+
+    inc_pc();
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+
+    set_rw2read();
+    access_memory();
+
+    alu(ALU_OP_ADD,low,idx,abrl,localflags);
+    alu(ALU_OP_ADD_WITH_CARRY,dbr,"00000000",abrh,localflags);
+
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr, acc);
+    inc_pc();  
 }
 
 
@@ -697,7 +729,22 @@ cycles: 3
 */
 void cpu_6502_sta_zp(){
     cycles = 3;
+    char zero[]="00000000";
 
+    cp_register(pcl,abrl);
+    cp_register(pch,abrh);
+
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr,abrl);
+    cp_register(zero,abrh);
+    cp_register(acc,dbr);
+
+    set_rw2write();
+    access_memory();
+
+    inc_pc();
 }
 
 
@@ -746,6 +793,39 @@ cycles: 6
 void cpu_6502_sta_izy(){
     cycles = 6;
 
+    char zeroaddr[]="00000000";
+    char low[]="00000000";
+    char zero[]="00000000";
+    char localflags[]="00000000";
+
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+    set_rw2read();
+    access_memory();
+    cp_register(dbr, zeroaddr);
+
+    inc_pc();
+
+    cp_register(pcl, zeroaddr);
+    cp_register(pch, zero);
+    set_rw2read();
+    access_memory();
+    cp_register(dbr,low);
+
+    inc_register(zeroaddr);
+
+    cp_register(pcl, zeroaddr);
+    cp_register(pch, zero);
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr,abrh);
+    alu(ALU_OP_ADD,low,idy,low,localflags);
+    cp_register(low,abrl);
+
+    cp_register(acc, dbr);
+    set_rw2write();
+    access_memory();
 }
 
 
@@ -857,7 +937,13 @@ cycles: 2
 */
 void cpu_6502_ldx_imm(){
     cycles = 2;
-
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+    set_rw2read();
+    access_memory();
+    cp_register(dbr, idx);
+    
+    inc_pc();
 }
 
 
@@ -1020,6 +1106,13 @@ cycles: 2
 void cpu_6502_ldy_imm(){
     cycles = 2;
 
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+    set_rw2read();
+    access_memory();
+    cp_register(dbr, idy);
+    
+    inc_pc();
 }
 
 
