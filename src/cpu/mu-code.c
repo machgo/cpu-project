@@ -753,6 +753,7 @@ void cpu_6502_lda_izy(){
     cp_register(low,abrl);
 
     alu(ALU_OP_ADD,abrl,idy,abrl,localflags);
+    //TODO carry on high
     set_rw2read();
     access_memory();
     cp_register(dbr, acc);
