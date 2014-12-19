@@ -594,6 +594,22 @@ cycles: 3
 void cpu_6502_lda_zp(){
     cycles = 3;
 
+    char zero[]="00000000";
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr, abrl);
+    cp_register(zero, abrh);
+
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr, acc);
+    zsflagging(flags,acc);
+    inc_pc();
 }
 
 /*
@@ -609,6 +625,24 @@ cycles: 4
 void cpu_6502_lda_zpx (){
     cycles = 4;
 
+    char zero[]="00000000";
+    char localflags[]="00000000";
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+
+    set_rw2read();
+    access_memory();
+
+    alu(ALU_OP_ADD, dbr, idx, dbr, localflags);
+    cp_register(dbr, abrl);
+    cp_register(zero, abrh);
+
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr, acc);
+    zsflagging(flags, acc);
+    inc_pc();
 }
 
 
@@ -624,7 +658,40 @@ cycles: 6
 */
 void cpu_6502_lda_izx(){
     cycles = 6;
+    char zeroaddr[]="00000000";
+    char low[]="00000000";
+    char zero[]="00000000";
+    char localflags[]="00000000";
 
+    cp_register(pcl, abrl);
+    cp_register(pch, abrh);
+    set_rw2read();
+    access_memory();
+    cp_register(dbr, zeroaddr);
+    alu(ALU_OP_ADD,zeroaddr,idx,zeroaddr,localflags);
+
+    inc_pc();
+
+    cp_register(pcl, zeroaddr);
+    cp_register(pch, zero);
+    set_rw2read();
+    access_memory();
+    cp_register(dbr,low);
+
+    inc_register(zeroaddr);
+
+    cp_register(pcl, zeroaddr);
+    cp_register(pch, zero);
+    set_rw2read();
+    access_memory();
+
+    cp_register(dbr,abrh);
+    cp_register(low,abrl);
+
+    set_rw2read();
+    access_memory();
+    cp_register(dbr, acc);
+    zsflagging(flags,acc);
 }
 
 
@@ -2462,18 +2529,6 @@ void cpu_6502_inx_imp(){
     cycles = 2;
 
     inc_register(idx);
-    int value = conv_bitstr2int(idx,0,7);
-    if (value==0)
-        setZeroflag(flags);
-    else
-        clearZeroflag(flags);
-    if (idx[0] == '1')
-        setOverflowflag(flags);
-    else
-        clearOverflowflag(flags);
-
-
-
 }
 
 
@@ -2491,16 +2546,6 @@ void cpu_6502_iny_imp(){
     cycles = 2;
 
     inc_register(idy);
-    int value = conv_bitstr2int(idy,0,7);
-    if (value==0)
-        setZeroflag(flags);
-    else
-        clearZeroflag(flags);
-    if (idy[0] == '1')
-        setOverflowflag(flags);
-    else
-        clearOverflowflag(flags);
-
 }
 
 
