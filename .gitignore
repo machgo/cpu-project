@@ -27,3 +27,13 @@
 *.i*86
 *.x86_64
 *.hex
+
+#Ctags
+tags
+
+#Compiled Stuff
+test-main
+graphic-main
+alu-main
+
+
