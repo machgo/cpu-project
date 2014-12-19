@@ -687,8 +687,8 @@ void cpu_6502_lda_izx(){
 
     inc_pc();
 
-    cp_register(pcl, zeroaddr);
-    cp_register(pch, zero);
+    cp_register(zeroaddr, abrl);
+    cp_register(zero, abrh);
     set_rw2read();
     access_memory();
     cp_register(dbr,low);
@@ -2714,8 +2714,8 @@ cycles: 2
 */
 void cpu_6502_inx_imp(){
     cycles = 2;
-
     inc_register(idx);
+    zsflagging(flags,idy);
 }
 
 
