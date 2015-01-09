@@ -2716,7 +2716,7 @@ cycles: 2
 void cpu_6502_inx_imp(){
     cycles = 2;
     inc_register(idx);
-    zsflagging(flags,idy);
+    zsflagging(flags,idx);
 }
 
 
